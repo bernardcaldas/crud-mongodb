@@ -14,10 +14,20 @@ import {
   Button,
   IconButton,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
+import FormModal from "../components/FormModal";
 
 export default function Home() {
+
+
+  const [isOpenFormModal, setIsOpenFormModal] = useState(false); 
+
+  const handleOpenFormModal = () => {
+    setIsOpenFormModal(true);
+  };
+
   return (
     <Flex
     w="100%"
@@ -56,10 +66,15 @@ export default function Home() {
         colorScheme="teal"
         size="lg"
         leftIcon={<FaPlus />}
+        onClick={handleOpenFormModal}
       >Add User</Button>
+      <FormModal 
+        isOpen={isOpenFormModal}
+        onClose={() => setIsOpenFormModal(false)}
+        
+      />
+    
     </Flex>
-
-      
       <Box
         margin="2rem"
         borderRadius="lg"
@@ -79,7 +94,12 @@ export default function Home() {
               <Td>Bernardo Caldas</Td>
               <Td>bernardo.caldas@gmail.com</Td>
               <Td>24/02/2021</Td>
-              <Td>
+              <Td
+                display="flex"
+                justifyContent="flex-end"
+
+              >
+                
                 <Button 
                   colorScheme="yellow"
                   size="sm"
@@ -92,6 +112,7 @@ export default function Home() {
                   marginLeft="1rem"
                   leftIcon={<FaTrash />}
                  >Delete</Button>
+                 
               </Td>
             </Tr>
             
