@@ -13,6 +13,7 @@ import {
   TableCaption,
   Button,
   IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -21,12 +22,8 @@ import FormModal from "../components/FormModal";
 
 export default function Home() {
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isOpenFormModal, setIsOpenFormModal] = useState(false); 
-
-  const handleOpenFormModal = () => {
-    setIsOpenFormModal(true);
-  };
 
   return (
     <Flex
@@ -66,12 +63,11 @@ export default function Home() {
         colorScheme="teal"
         size="lg"
         leftIcon={<FaPlus />}
-        onClick={handleOpenFormModal}
+        onClick={() => onOpen()}
       >Add User</Button>
       <FormModal 
-        isOpen={isOpenFormModal}
-        onClose={() => setIsOpenFormModal(false)}
-        
+        isOpen={isOpen}
+        onClose={onClose}
       />
     
     </Flex>
@@ -86,20 +82,18 @@ export default function Home() {
             <Tr>
               <Th>AUTHOR</Th>
               <Th>EMAIL</Th>
-              <Th>EMPLOYED</Th>
+              <Th>DEPARTMENT</Th>
             </Tr>
           </Thead>
           <Tbody>
             <Tr>
               <Td>Bernardo Caldas</Td>
               <Td>bernardo.caldas@gmail.com</Td>
-              <Td>24/02/2021</Td>
+              <Td>Accounting</Td>
               <Td
                 display="flex"
                 justifyContent="flex-end"
-
               >
-                
                 <Button 
                   colorScheme="yellow"
                   size="sm"
