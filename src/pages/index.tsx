@@ -20,6 +20,15 @@ import { useState } from "react";
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
 
+
+interface UsersData {
+  id: number;
+  name: string;
+  email: string;
+  department: string;
+}
+
+
 export default function Home() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
