@@ -13,56 +13,89 @@ import {
     FormLabel,
     FormControl,
     FormHelperText,
+    useDisclosure,
     
     
   } from '@chakra-ui/react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 
 
-interface FormModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+export interface UserProps {
+  id: String;
+  name: String;
+  email: String;
+  department: String;
 }
 
-export default function FormModal({isOpen, onClose}: FormModalProps) {
+interface errorsProps {
+  name?: String;
+  email?: String;
+  department?: String;
+}
 
-  const [name, setName] = useState("");
+interface Props {
+  state: boolean;
+  name: string;
+  setName(): string;
+}
+
+
+
+
+
+
+export default function FormModal ({state, name, setName}: Props) {
+
+  //const data = useContext(UsersListContext);
+  const {onClose} = useDisclosure()
+
+  //const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
-  const [error, setError] = useState({name:'', email: '', department: ''});
+  const [id, setId] = useState("");
+  const [clients, setClients] = useState<UserProps[]>([]);
+  const [errors, setErrors] = useState<errorsProps>()
 
 
   const isValidFormData = () => {
     if(!name) {
-      setError({...error, name: 'Name is required'});
+      setErrors({name: 'email is required'})
       return false;
     }
     if(!email) {
-      setError({...error, email: 'Email is required'});
+      setErrors({
+        email: 'Email is required'
+      });
       return false;
     }
     if(!department) {
-      setError({...error, department: 'Department is required'});
+      setErrors({department: 'Department is required'});
       return false;
     }
-    setError({...error, name: '', email: '', department: ''});
+    setErrors({});
     return true;
   }
 
   const handleSubmitCreateClient = (e: any) => {
     e.preventDefault();
     if(!isValidFormData()) return
-    console.log({name, email, department});
-    
-    setName('');
-    setEmail('');
-    setDepartment('');
+    const newClient: UsersList = {
+      id: new Date().getMilliseconds().toString(),
+      name,
+      email,
+      department
+    }
+    setClients([...clients, newClient]);
+    setName(""); 
+    setEmail("");
+    setDepartment("");
+   
+    console.log({clients});
+    //console.log({name, email, department});
+
 
   }
-
-  
-
     
     return(
         <>

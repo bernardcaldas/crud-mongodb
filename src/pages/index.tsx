@@ -15,26 +15,32 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
+import { UsersListContext } from "../contexts/UsersListContext";
 
 
-interface UsersData {
+interface UsersList {
   id: number;
-  name: string;
-  email: string;
-  department: string;
+  name: String;
+  email: String;
+  department: String;
 }
-
 
 export default function Home() {
 
+  const [clients, setClients] = useState<UsersList[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+ 
+  
+  //console.log(data);
 
   return (
+
+    <UsersListContext.Provider value={[clients]}>
+
     <Flex
     w="100%"
     maxWidth="100%"
@@ -95,10 +101,12 @@ export default function Home() {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>Bernardo Caldas</Td>
-              <Td>bernardo.caldas@gmail.com</Td>
-              <Td>Accounting</Td>
+            {clients.map(client => (
+
+              <Tr key={client.id}>
+              <Td>{client.name}</Td>
+              <Td>{client.email}</Td>
+              <Td>{client.department}</Td>
               <Td
                 display="flex"
                 justifyContent="flex-end"
@@ -117,7 +125,7 @@ export default function Home() {
                  >Delete</Button>
                  
               </Td>
-            </Tr>
+            </Tr>))}
             
           
           </Tbody>
@@ -126,6 +134,7 @@ export default function Home() {
 
 
     </Flex>
+    </UsersListContext.Provider>
   )
 
 }
