@@ -15,14 +15,15 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
 import { UsersListContext } from "../contexts/UsersListContext";
+//import users from '../components/FormModal/index';
 
 
-interface UsersList {
+interface IUsers {
   id: number;
   name: String;
   email: String;
@@ -31,15 +32,19 @@ interface UsersList {
 
 export default function Home() {
 
-  const [clients, setClients] = useState<UsersList[]>([]);
+  const [users, setUsers] = useState<IUsers[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    console.log('updated');
+  }, [users]);
  
   
   //console.log(data);
 
   return (
 
-    <UsersListContext.Provider value={[clients]}>
+    
 
     <Flex
     w="100%"
@@ -101,12 +106,12 @@ export default function Home() {
             </Tr>
           </Thead>
           <Tbody>
-            {clients.map(client => (
+            {users.map(users => (
 
-              <Tr key={client.id}>
-              <Td>{client.name}</Td>
-              <Td>{client.email}</Td>
-              <Td>{client.department}</Td>
+              <Tr key={users.id}>
+              <Td>{users.name}</Td>
+              <Td>{users.email}</Td>
+              <Td>{users.department}</Td>
               <Td
                 display="flex"
                 justifyContent="flex-end"
@@ -134,7 +139,7 @@ export default function Home() {
 
 
     </Flex>
-    </UsersListContext.Provider>
-  )
+    
+  );
 
 }

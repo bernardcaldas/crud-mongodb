@@ -17,85 +17,56 @@ import {
     
     
   } from '@chakra-ui/react'
-import { useState, useContext } from 'react';
 
+import React, { useState } from 'react';
 
-
-export interface UserProps {
-  id: String;
-  name: String;
-  email: String;
-  department: String;
+interface ModalProps {
+  isOpen: boolean,
+  onClose: () => void,
 }
 
-interface errorsProps {
-  name?: String;
-  email?: String;
-  department?: String;
-}
-
-interface Props {
-  state: boolean;
+type Users = {
+  id: number;
   name: string;
-  setName(): string;
+  email: string;
+  department: string;
 }
 
 
 
 
+export default function FormModal ({isOpen, onClose}: ModalProps) {
+
+  
 
 
-export default function FormModal ({state, name, setName}: Props) {
-
-  //const data = useContext(UsersListContext);
-  const {onClose} = useDisclosure()
-
-  //const [name, setName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
   const [id, setId] = useState("");
-  const [clients, setClients] = useState<UserProps[]>([]);
+  const [users , setUsers] = useState<Users[]>([]);
   const [errors, setErrors] = useState<errorsProps>()
 
-
-  const isValidFormData = () => {
-    if(!name) {
-      setErrors({name: 'email is required'})
-      return false;
-    }
-    if(!email) {
-      setErrors({
-        email: 'Email is required'
-      });
-      return false;
-    }
-    if(!department) {
-      setErrors({department: 'Department is required'});
-      return false;
-    }
-    setErrors({});
-    return true;
-  }
-
-  const handleSubmitCreateClient = (e: any) => {
+  const handleCreateClient = (e: React.FormEvent) => {
     e.preventDefault();
-    if(!isValidFormData()) return
-    const newClient: UsersList = {
-      id: new Date().getMilliseconds().toString(),
-      name,
-      email,
-      department
-    }
-    setClients([...clients, newClient]);
-    setName(""); 
+    const newUser: Users = {
+      id: Math.random(),
+      name: name,
+      email: email,
+      department: department,
+    };
+    setUsers([...users, newUser]);
     setEmail("");
+    setName("");
     setDepartment("");
-   
-    console.log({clients});
-    //console.log({name, email, department});
+    onClose();
 
 
+    console.log({users})
   }
+
+  
+
     
     return(
         <>
@@ -106,17 +77,17 @@ export default function FormModal ({state, name, setName}: Props) {
           <ModalCloseButton />
           <ModalBody>
             
-            <FormControl  as="form" isInvalid={!!error} onSubmit={handleSubmitCreateClient} >
+            <FormControl  as="form" isInvalid={!!errors} onSubmit={handleCreateClient} >
             <FormLabel>Name</FormLabel>
             <Input 
                 id="name"
                 name={name}
                 placeholder="Name"
                 value={name}
-                onChange={event => setName(event.target.value)}
+                onChange={e => setName(e.target.value)}
                 
             />
-            {!!error && <FormErrorMessage textColor="red.300">{error.name}</FormErrorMessage>}
+            {!!errors && <FormErrorMessage textColor="red.300">{errors.name}</FormErrorMessage>}
 
             <FormLabel>E-mail</FormLabel>
             <Input
@@ -128,7 +99,7 @@ export default function FormModal ({state, name, setName}: Props) {
                 onChange={event => setEmail(event.target.value)}
                 
             />
-            {!!error && <FormErrorMessage textColor="red.300">{error.email}</FormErrorMessage>}
+            {!!errors && <FormErrorMessage textColor="red.300">{errors.email}</FormErrorMessage>}
             <FormLabel>Department</FormLabel>
             <Input
                 id="department" 
@@ -137,7 +108,7 @@ export default function FormModal ({state, name, setName}: Props) {
                 value={department}
                 onChange={event => setDepartment(event.target.value)}
             />
-            {!!error && <FormErrorMessage textColor="red.300">{error.department}</FormErrorMessage>}     
+            {!!errors && <FormErrorMessage textColor="red.300">{errors.department}</FormErrorMessage>}     
             <Button colorScheme="teal" type="submit">Teste</Button>
             </FormControl>
             
