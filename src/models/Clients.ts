@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const ClientSchema = new mongoose.Schema({
     name: String,
     email: String,
+    department: String,
     createdAt: {
         type: Date,
         default: new Date()

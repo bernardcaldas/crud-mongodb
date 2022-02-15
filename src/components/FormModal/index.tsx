@@ -19,6 +19,7 @@ import {
   } from '@chakra-ui/react'
 
 import React, { useState } from 'react';
+import api from '../../services/api';
 
 interface ModalProps {
   isOpen: boolean,
@@ -47,15 +48,17 @@ export default function FormModal ({isOpen, onClose}: ModalProps) {
   const [users , setUsers] = useState<Users[]>([]);
   const [errors, setErrors] = useState<errorsProps>()
 
-  const handleCreateClient = (e: React.FormEvent) => {
+  const handleCreateClient = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newUser: Users = {
-      id: Math.random(),
-      name: name,
-      email: email,
-      department: department,
-    };
-    setUsers([...users, newUser]);
+    const {data} = await api.post('/clients', {name, email, department});
+
+    // const newUser: Users = {
+    //   id: Math.random(),
+    //   name: name,
+    //   email: email,
+    //   department: department,
+    // };
+    setUsers([...users, data]);
     setEmail("");
     setName("");
     setDepartment("");
