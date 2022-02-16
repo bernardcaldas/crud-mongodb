@@ -23,7 +23,7 @@ import api from "../services/api";
 
 
 interface IUsers {
-  _id: string
+  id: string
   name: string
   email: string
   department: string
@@ -121,7 +121,7 @@ export default function Home() {
           <Tbody>
             {users.map(cliente => (
 
-            <Tr key={cliente._id}>
+            <Tr key={cliente.id}>
               <Td>{cliente.name}</Td>
               <Td>{cliente.email}</Td>
               <Td>{cliente.department}</Td>
