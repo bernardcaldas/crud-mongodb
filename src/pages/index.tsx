@@ -19,12 +19,11 @@ import { useState, useContext, useEffect } from "react";
 
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
-import { UsersListContext } from "../contexts/UsersListContext";
-//import users from '../components/FormModal/index';
+import api from "../services/api";
 
 
 interface IUsers {
-  id: number;
+  _id: String;
   name: String;
   email: String;
   department: String;
@@ -36,11 +35,26 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    console.log('updated');
-  }, [users]);
+    api.get('/clients').then(({ data }) => {
+      const newData: any = []
+      const convertData = data.data
+
+      convertData.map((item: any) => {
+        newData.push({
+          id: item._id,
+          name: item.name,
+          email: item.email,
+          department: item.department,
+          createdAt: item.createdAt
+        })
+      })
+
+      setUsers(newData)
+    })
+  }, [])
  
   
-  //console.log(data);
+  console.log(users);
 
   return (
 
@@ -106,12 +120,12 @@ export default function Home() {
             </Tr>
           </Thead>
           <Tbody>
-            {users.map(users => (
+            {users.map(cliente => (
 
-              <Tr key={users.id}>
-              <Td>{users.name}</Td>
-              <Td>{users.email}</Td>
-              <Td>{users.department}</Td>
+            <Tr key={cliente._id}>
+              <Td>{cliente.name}</Td>
+              <Td>{cliente.email}</Td>
+              <Td>{cliente.department}</Td>
               <Td
                 display="flex"
                 justifyContent="flex-end"
