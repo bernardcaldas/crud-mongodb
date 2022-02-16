@@ -23,10 +23,10 @@ import api from "../services/api";
 
 
 interface IUsers {
-  _id: String;
-  name: String;
-  email: String;
-  department: String;
+  _id: string
+  name: string
+  email: string
+  department: string
 }
 
 export default function Home() {
@@ -54,7 +54,6 @@ export default function Home() {
   }, [])
  
   
-  console.log(users);
 
   return (
 
