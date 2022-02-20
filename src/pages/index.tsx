@@ -39,9 +39,13 @@ export default function Home() {
   
   const [users, setUsers] = useState<IUsers[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+  const [dados, setDados] = useState('');
 
-  
+  const parentToChild = (e: React.FormEvent) => {
+    e.preventDefault();
+    setDados('This is data from Parent Component to the Child Component.');
+    console.log(dados);
+  }
 
   const handleAddUsers = async (users: IUsers) => {
     e.preventDefault();
