@@ -15,11 +15,15 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
 import { useState, useContext, useEffect } from "react";
 
 import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
 import api from "../services/api";
+import router, { useRouter} from 'next/router';
+
+
 
 
 interface IUsers {
@@ -29,35 +33,59 @@ interface IUsers {
   department: string
 }
 
+
 export default function Home() {
 
+  
   const [users, setUsers] = useState<IUsers[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [dados, setDados] = useState('');
 
+  const parentToChild = (e: React.FormEvent) => {
+    e.preventDefault();
+    setDados('This is data from Parent Component to the Child Component.');
+    console.log(dados);
+  }
+
+  const handleAddUsers = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const {data} = await api.post('/clients', {users});
+    setUsers([...users, data]);
+    onClose();
+    console.log("chama api e grava no banco");
+  }
+
+  
   useEffect(() => {
-    api.get('/clients').then(({ data }) => {
-      const newData: any = []
-      const convertData = data.data
 
-      convertData.map((item: any) => {
-        newData.push({
-          id: item._id,
-          name: item.name,
-          email: item.email,
-          department: item.department,
-          createdAt: item.createdAt
+    async function loadUsers() {
+
+        const response =  await api.get('/clients').then(({ data }) => {
+        const newData: any = []
+        const convertData = data.data
+
+        convertData.map((item: any) => {
+          newData.push({
+            id: item._id,
+            name: item.name,
+            email: item.email,
+            department: item.department,
+            createdAt: item.createdAt
+          })
         })
+
+        setUsers(newData)
       })
 
-      setUsers(newData)
-    })
+    }
+    loadUsers();
   }, [])
- 
+
+
+
   
-
-  return (
-
-    
+  
+  return (    
 
     <Flex
     w="100%"
@@ -90,6 +118,7 @@ export default function Home() {
         fontSize="xl"
         paddingLeft="2rem"
       > WebApp - created using nextJs</Text>
+      <Button colorScheme="telegram" onClick={parentToChild}> chama ...</Button>
       <Button
         marginTop="2rem"
         marginRight="2rem"
@@ -101,6 +130,8 @@ export default function Home() {
       <FormModal 
         isOpen={isOpen}
         onClose={onClose}
+        itemData={users}
+        addUser={() => handleAddUsers}
       />
     
     </Flex>
@@ -154,5 +185,18 @@ export default function Home() {
     </Flex>
     
   );
-
+  
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const { data } = await api.get('/clients');
+//   return {
+//     props: {
+//       users: data.data
+//     }
+//   }
+// }
+
+
+
+

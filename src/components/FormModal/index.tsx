@@ -18,54 +18,66 @@ import {
     
   } from '@chakra-ui/react'
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import api from '../../services/api';
 
+import { useRouter} from 'next/router';
+
+
+
+interface IUsers {
+  id: string
+  name: string
+  email: string
+  department: string
+}
+
+
 interface ModalProps {
-  isOpen: boolean,
-  onClose: () => void,
-}
-
-type Users = {
-  id: number;
-  name: string;
-  email: string;
-  department: string;
-}
-
-
-
-
-export default function FormModal ({isOpen, onClose}: ModalProps) {
-
+  isOpen: boolean;
+  onClose: () => void;
+  itemData: IUsers[];
+  addUser: (data: IUsers) => void;
   
+}
 
 
+
+export default function FormModal ({isOpen, onClose, itemData, addUser}: ModalProps) {
+
+  const formRef = useRef(null);
+
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
   const [id, setId] = useState("");
-  const [users , setUsers] = useState<Users[]>([]);
+  const [users , setUsers] = useState<IUsers[]>([]);
   const [errors, setErrors] = useState<errorsProps>()
+  
+  
 
-  const handleCreateClient = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const {data} = await api.post('/clients', {name, email, department});
+  // const handleCreateClient = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const {data} = await api.post('/clients', {name, email, department});
 
-    // const newUser: Users = {
-    //   id: Math.random(),
-    //   name: name,
-    //   email: email,
-    //   department: department,
-    // };
-    setUsers([...users, data]);
-    setEmail("");
-    setName("");
-    setDepartment("");
+  //   // const newUser: Users = {
+  //   //   id: Math.random(),
+  //   //   name: name,
+  //   //   email: email,
+  //   //   department: department,
+  //   // };
+  //   setUsers([...users, data]);
+  //   setEmail("");
+  //   setName("");
+  //   setDepartment("");
+  //   onClose();
+    
+  // }
+
+  const handleSubmit = async (data: IUsers) => {
+    addUser(data);
     onClose();
-
-
-    console.log({users})
   }
 
   
@@ -80,7 +92,7 @@ export default function FormModal ({isOpen, onClose}: ModalProps) {
           <ModalCloseButton />
           <ModalBody>
             
-            <FormControl  as="form" isInvalid={!!errors} onSubmit={handleCreateClient} >
+            <FormControl  as="form" isInvalid={!!errors} ref={formRef} onSubmit={handleSubmit}>
             <FormLabel>Name</FormLabel>
             <Input 
                 id="name"
