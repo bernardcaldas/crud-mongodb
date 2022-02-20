@@ -39,18 +39,14 @@ export default function Home() {
   
   const [users, setUsers] = useState<IUsers[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [dados, setDados] = useState('');
+  
 
-  const parentToChild = (e: React.FormEvent) => {
-    e.preventDefault();
-    setDados('This is data from Parent Component to the Child Component.');
-    console.log(dados);
-  }
+  
 
-  const handleAddUsers = async (e: React.FormEvent) => {
+  const handleAddUsers = async (users: IUsers) => {
     e.preventDefault();
-    const {data} = await api.post('/clients', {users});
-    setUsers([...users, data]);
+    const response = await api.post('/clients', {...users});
+    setUsers([...users, response.data]);
     onClose();
     console.log("chama api e grava no banco");
   }
@@ -130,8 +126,7 @@ export default function Home() {
       <FormModal 
         isOpen={isOpen}
         onClose={onClose}
-        itemData={users}
-        addUser={() => handleAddUsers}
+        handleAddUsers={() => handleAddUsers}
       />
     
     </Flex>
