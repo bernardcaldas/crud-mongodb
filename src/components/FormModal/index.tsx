@@ -56,23 +56,23 @@ export default function FormModal ({isOpen, onClose, handleAddUsers}: ModalProps
   
   
 
-  // const handleCreateClient = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const {data} = await api.post('/clients', {name, email, department});
+  const handleCreateClient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const {data} = await api.post('/clients', {name, email, department});
 
-  //   // const newUser: Users = {
-  //   //   id: Math.random(),
-  //   //   name: name,
-  //   //   email: email,
-  //   //   department: department,
-  //   // };
-  //   setUsers([...users, data]);
-  //   setEmail("");
-  //   setName("");
-  //   setDepartment("");
-  //   onClose();
+    // const newUser: Users = {
+    //   id: Math.random(),
+    //   name: name,
+    //   email: email,
+    //   department: department,
+    // };
+    setUsers([...users, data]);
+    setEmail("");
+    setName("");
+    setDepartment("");
+    onClose();
     
-  // }
+  }
 
   const handleSubmit = async (data: IUsers) => {
     handleAddUsers(data);
@@ -91,7 +91,7 @@ export default function FormModal ({isOpen, onClose, handleAddUsers}: ModalProps
           <ModalCloseButton />
           <ModalBody>
             
-            <FormControl  as="form" isInvalid={!!errors} ref={formRef} onSubmit={handleSubmit}>
+            <FormControl  as="form" isInvalid={!!errors} ref={formRef} onSubmit={handleCreateClient}>
             <FormLabel>Name</FormLabel>
             <Input 
                 id="name"

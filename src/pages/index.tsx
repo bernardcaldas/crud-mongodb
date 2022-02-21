@@ -22,6 +22,7 @@ import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa';
 import FormModal from "../components/FormModal";
 import api from "../services/api";
 import router, { useRouter} from 'next/router';
+import { TableList } from "../components/Table";
 
 
 
@@ -40,49 +41,18 @@ export default function Home() {
   const [users, setUsers] = useState<IUsers[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [dados, setDados] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
 
-  const parentToChild = (e: React.FormEvent) => {
-    e.preventDefault();
-    setDados('This is data from Parent Component to the Child Component.');
-    console.log(dados);
-  }
-
-  const handleAddUsers = async (users: IUsers) => {
-    e.preventDefault();
-    const response = await api.post('/clients', {...users});
-    setUsers([...users, response.data]);
+ const handleAddUsers = async () => {
+    const {data} = await api.post('/clients', {name, email, department});
+    setUsers([...users, data]);
+    setEmail("");
+    setName("");
+    setDepartment("");
     onClose();
-    console.log("chama api e grava no banco");
   }
-
-  
-  useEffect(() => {
-
-    async function loadUsers() {
-
-        const response =  await api.get('/clients').then(({ data }) => {
-        const newData: any = []
-        const convertData = data.data
-
-        convertData.map((item: any) => {
-          newData.push({
-            id: item._id,
-            name: item.name,
-            email: item.email,
-            department: item.department,
-            createdAt: item.createdAt
-          })
-        })
-
-        setUsers(newData)
-      })
-
-    }
-    loadUsers();
-  }, [])
-
-
-
   
   
   return (    
@@ -118,7 +88,7 @@ export default function Home() {
         fontSize="xl"
         paddingLeft="2rem"
       > WebApp - created using nextJs</Text>
-      <Button colorScheme="telegram" onClick={parentToChild}> chama ...</Button>
+      
       <Button
         marginTop="2rem"
         marginRight="2rem"
@@ -134,52 +104,8 @@ export default function Home() {
       />
     
     </Flex>
-      <Box
-        margin="2rem"
-        borderRadius="lg"
-        bg="green.50"
-        
-      >
-        <Table size="md">
-          <Thead>
-            <Tr>
-              <Th>AUTHOR</Th>
-              <Th>EMAIL</Th>
-              <Th>DEPARTMENT</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {users.map(cliente => (
-
-            <Tr key={cliente.id}>
-              <Td>{cliente.name}</Td>
-              <Td>{cliente.email}</Td>
-              <Td>{cliente.department}</Td>
-              <Td
-                display="flex"
-                justifyContent="flex-end"
-              >
-                <Button 
-                  colorScheme="yellow"
-                  size="sm"
-                  leftIcon={<FaEdit/>}
-                >Edit
-                </Button>
-                <Button
-                 colorScheme="red"
-                  size="sm"
-                  marginLeft="1rem"
-                  leftIcon={<FaTrash />}
-                 >Delete</Button>
-                 
-              </Td>
-            </Tr>))}
-            
-          
-          </Tbody>
-        </Table>
-      </Box>
-
+    <TableList />
+      
 
     </Flex>
     
