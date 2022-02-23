@@ -20,14 +20,11 @@ export function TableList() {
     const [users, setUsers] = useState<IUsers[]>([]);
 
     useEffect(() => {
-      
-      async function loadUsers() {
 
         const interval = setInterval(() => {
           const response =  api.get('/clients').then(({ data }) => {
                   const newData: any = []
                   const convertData = data.data
-          
                   convertData.map((item: any) => {
                     newData.push({
                       id: item._id,
@@ -38,13 +35,20 @@ export function TableList() {
                     })
                   })
             setUsers(newData);
-            console.log('do it every second')
+            //console.log('do it every second')
           });
-        }, 1000);
+        }, 2000);
         return () => clearInterval(interval);
-      }
-      loadUsers();
+      
+      
     }, []);
+
+
+    const handleDelete = async (id: string) => {
+        await api.delete(`/clients/${id}`);
+        const newUsers = users.filter((user: IUsers) => user.id !== id);
+        setUsers(newUsers);
+    }
   
 
 
@@ -114,6 +118,7 @@ export function TableList() {
                   size="sm"
                   marginLeft="1rem"
                   leftIcon={<FaTrash />}
+                  onClick={() => {handleDelete(cliente.id)}}
                  >Delete</Button>
                  
               </Td>
