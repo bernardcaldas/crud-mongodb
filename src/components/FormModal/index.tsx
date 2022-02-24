@@ -36,13 +36,13 @@ interface IUsers {
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  handleAddUsers: (data: IUsers) => void;
+  // handleAddUsers: (data: IUsers) => void;
   
 }
 
 
 
-export default function FormModal ({isOpen, onClose, handleAddUsers}: ModalProps) {
+export default function FormModal ({isOpen, onClose}: ModalProps) {
 
   const formRef = useRef(null);
 
@@ -74,10 +74,10 @@ export default function FormModal ({isOpen, onClose, handleAddUsers}: ModalProps
     
   }
 
-  const handleSubmit = async (data: IUsers) => {
-    handleAddUsers(data);
-    onClose();
-  }
+  // const handleSubmit = async (data: IUsers) => {
+  //   handleAddUsers(data);
+  //   onClose();
+  // }
 
   
 

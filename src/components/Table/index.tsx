@@ -1,7 +1,8 @@
-import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
+import FormModal from "../../components/FormModal";
 
 
 interface IUsers {
@@ -18,6 +19,11 @@ export function TableList() {
 
 
     const [users, setUsers] = useState<IUsers[]>([]);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [department, setDepartment] = useState("");
+    const [id, setId] = useState("");
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
 
@@ -42,6 +48,19 @@ export function TableList() {
       
       
     }, []);
+
+
+ 
+
+    const handleEdit = async (client: IUsers) => {
+        await api.put(`/clients/${id}`, {name, email, department});
+        setUsers(users.map((user: IUsers) => (user.id === id ? {...user, name, email, department} : user)));
+        // setName(data.name);
+        // setEmail(data.email);
+        // setDepartment(data.department);
+        // setId(data.id);
+        onOpen();
+    }
 
 
     const handleDelete = async (id: string) => {
@@ -111,6 +130,7 @@ export function TableList() {
                   colorScheme="yellow"
                   size="sm"
                   leftIcon={<FaEdit/>}
+                  onClick={() => {handleEdit(cliente)}}
                 >Edit
                 </Button>
                 <Button
@@ -127,6 +147,10 @@ export function TableList() {
           
           </Tbody>
         </Table>
+        <FormModal 
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       </Box>
 
     )

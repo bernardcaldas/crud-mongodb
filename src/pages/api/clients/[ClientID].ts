@@ -16,7 +16,7 @@ export default async function handler(
     case 'PUT':
       try {
         const { name, email, department } = req.body;
-        if (!name && !email) throw 'Invalid data';
+         if (!name && !email && !department) throw 'Invalid data';
         const client = await Client.findByIdAndUpdate(ClientID, {name, email, department}, {new: true})
         res.status(200).json({ success: true, data: client})
         } catch (error) {
