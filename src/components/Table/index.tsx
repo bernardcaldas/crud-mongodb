@@ -1,8 +1,9 @@
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 import FormModal from "../../components/FormModal";
+import EditUserModal from "../EditUserModal";
 
 
 interface IUsers {
@@ -23,6 +24,8 @@ export function TableList() {
     const [email, setEmail] = useState("");
     const [department, setDepartment] = useState("");
     const [id, setId] = useState("");
+    const [EditingUser, setEditingUser] = useState<IUsers>({} as IUsers);
+    const [editModalOpen, setEditModalOpen] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
@@ -49,18 +52,47 @@ export function TableList() {
       
     }, []);
 
+    const toggleEditModal = () => {
+
+      setEditModalOpen(!editModalOpen);
+    }
+
+
+    
+
+    // const handleUpdateClient = async (id: string) => {
+    //     // e.preventDefault();
+    //     const {data} = await api.put(`/clients/${id}`, {name, email, department});
+    //     setUsers([...users, data]);
+    //     console.log(data)
+    //     // setEmail("");
+    //     // setName("");
+    //     // setDepartment("");
+    //     // onClose();
+    //     onOpen();
+    // }
+
+    // const handleUpdateClientModal = async () => {
+    //   const {data} = await api.put(`/clients/${id}`, {name, email, department});
+    //     setName(data.data.name);
+    //     setEmail(data.data.email);
+    //     setDepartment(data.data.department);
+    //     setId(data.data._id);
+    //     console.log(data);
+        
+    // }
 
  
 
-    const handleEdit = async (client: IUsers) => {
-        await api.put(`/clients/${id}`, {name, email, department});
-        setUsers(users.map((user: IUsers) => (user.id === id ? {...user, name, email, department} : user)));
-        // setName(data.name);
-        // setEmail(data.email);
-        // setDepartment(data.department);
-        // setId(data.id);
-        onOpen();
-    }
+    // const handleEdit = async (client: IUsers) => {
+    //     await api.put(`/clients/${id}`, {name, email, department});
+    //     setUsers(users.map((user: IUsers) => (user.id === id ? {...user, name, email, department} : user)));
+    //     // setName(data.name);
+    //     // setEmail(data.email);
+    //     // setDepartment(data.department);
+    //     // setId(data.id);
+    //     onOpen();
+    // }
 
 
     const handleDelete = async (id: string) => {
@@ -68,7 +100,20 @@ export function TableList() {
         const newUsers = users.filter((user: IUsers) => user.id !== id);
         setUsers(newUsers);
     }
-  
+
+    const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+      onOpen();
+      setUsers({...users, 
+        [e.target.name]: e.target.value,
+
+      });
+    }
+
+    const handleEditFood = (food: IFood) => {
+      setEditingFood(food);
+      setModalOpen(true)
+    }
+
 
 
 
@@ -130,7 +175,7 @@ export function TableList() {
                   colorScheme="yellow"
                   size="sm"
                   leftIcon={<FaEdit/>}
-                  onClick={() => {handleEdit(cliente)}}
+                  onClick={()=> toggleEditModal()}
                 >Edit
                 </Button>
                 <Button
@@ -151,7 +196,14 @@ export function TableList() {
         isOpen={isOpen}
         onClose={onClose}
       />
+        <EditUserModal 
+        isOpen={editModalOpen}
+        EditingUser={EditingUser}
+        onClose={toggleEditModal}
+        handleUpdateUser={handleUpdate}
+        />
       </Box>
+
 
     )
 }
