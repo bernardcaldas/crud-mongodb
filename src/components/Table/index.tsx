@@ -101,20 +101,30 @@ export function TableList() {
         setUsers(newUsers);
     }
 
-    const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+    // const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+    //   onOpen();
+    //   setUsers({...users, 
+    //     [e.target.name]: e.target.value,
+
+    //   });
+    // }
+
+    const handleEditFood = (cliente: IUsers) => {
+      setEditingUser(cliente);
+      setEditModalOpen(true)
+      console.log(EditingUser)
+    }
+    const handleShowUpdate = ({id,name,email, department}: IUsers) => {
+      setId(id);
+      setName(name);
+      setEmail(email);
+      setDepartment(department);
       onOpen();
-      setUsers({...users, 
-        [e.target.name]: e.target.value,
-
-      });
+      console.log({id,name,email,department})
+      
     }
 
-    const handleEditFood = (food: IFood) => {
-      setEditingFood(food);
-      setModalOpen(true)
-    }
-
-
+    
 
 
 
@@ -175,7 +185,7 @@ export function TableList() {
                   colorScheme="yellow"
                   size="sm"
                   leftIcon={<FaEdit/>}
-                  onClick={()=> toggleEditModal()}
+                  onClick={()=> handleEditFood(cliente)}
                 >Edit
                 </Button>
                 <Button
@@ -200,7 +210,7 @@ export function TableList() {
         isOpen={editModalOpen}
         EditingUser={EditingUser}
         onClose={toggleEditModal}
-        handleUpdateUser={handleUpdate}
+        handleUpdateUser={handleShowUpdate}
         />
       </Box>
 

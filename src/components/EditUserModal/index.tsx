@@ -42,7 +42,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;  
   handleUpdateUser: (data: AddUser) => void;
-  EditingUser?: IUsers;
+  EditingUser: IUsers;
   
 }
 
@@ -83,7 +83,7 @@ export default function EditUserModal ({isOpen, onClose, handleUpdateUser, Editi
                 id="name"
                 name={name}
                 placeholder="Name"
-                value={name}
+                value={EditingUser.name}
                 onChange={e => setName(e.target.value)}
                 
             />
@@ -95,7 +95,7 @@ export default function EditUserModal ({isOpen, onClose, handleUpdateUser, Editi
                 type="email"
                 name={email}
                 placeholder="E-mail"
-                value={email}
+                value={EditingUser.email}
                 onChange={event => setEmail(event.target.value)}
                 
             />
@@ -105,7 +105,7 @@ export default function EditUserModal ({isOpen, onClose, handleUpdateUser, Editi
                 id="department" 
                 name={department}
                 placeholder="Department"
-                value={department}
+                value={EditingUser.department}
                 onChange={event => setDepartment(event.target.value)}
             />
             {!!errors && <FormErrorMessage textColor="red.300">{errors.department}</FormErrorMessage>}     
