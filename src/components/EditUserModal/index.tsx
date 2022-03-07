@@ -54,7 +54,7 @@ export default function EditUserModal ({isOpen, onClose, handleUpdateUser, Editi
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
   const [id, setId] = useState("");
-  const [users , setUsers] = useState<IUsers[]>([]);
+  // const [EditingUser, setEditingUser] = useState<IUsers[]>([]);
   const [errors, setErrors] = useState<errorsProps>()
 
 
@@ -109,20 +109,22 @@ export default function EditUserModal ({isOpen, onClose, handleUpdateUser, Editi
                 onChange={event => setDepartment(event.target.value)}
             />
             {!!errors && <FormErrorMessage textColor="red.300">{errors.department}</FormErrorMessage>}     
-            <Button colorScheme="teal" type="submit">Update</Button>
+            <Button colorScheme="teal" type="submit" mt="6">Update</Button>
             </FormControl>
             
           </ModalBody>
 
-          <ModalFooter>
-            {/* <Button colorScheme="teal" type="submit"></Button> */}
+          {/* <ModalFooter>
+            <Button colorScheme="teal" type="submit">Update User</Button> 
             <Button colorScheme='blue' ml={3} onClick={onClose}>
               Close
             </Button>
             
             
           </ModalFooter>
-          
+           */}
+
+
         </ModalContent>
       </Modal>
       </>

@@ -44,12 +44,11 @@ export function TableList() {
                     })
                   })
             setUsers(newData);
-            //console.log('do it every second')
+            
+            
           });
-        }, 2000);
+        }, 4000);
         return () => clearInterval(interval);
-      
-      
     }, []);
 
     const toggleEditModal = () => {
@@ -57,103 +56,52 @@ export function TableList() {
       setEditModalOpen(!editModalOpen);
     }
 
-
-    
-
-    // const handleUpdateClient = async (id: string) => {
-    //     // e.preventDefault();
-    //     const {data} = await api.put(`/clients/${id}`, {name, email, department});
-    //     setUsers([...users, data]);
-    //     console.log(data)
-    //     // setEmail("");
-    //     // setName("");
-    //     // setDepartment("");
-    //     // onClose();
-    //     onOpen();
-    // }
-
-    // const handleUpdateClientModal = async () => {
-    //   const {data} = await api.put(`/clients/${id}`, {name, email, department});
-    //     setName(data.data.name);
-    //     setEmail(data.data.email);
-    //     setDepartment(data.data.department);
-    //     setId(data.data._id);
-    //     console.log(data);
-        
-    // }
-
- 
-
-    // const handleEdit = async (client: IUsers) => {
-    //     await api.put(`/clients/${id}`, {name, email, department});
-    //     setUsers(users.map((user: IUsers) => (user.id === id ? {...user, name, email, department} : user)));
-    //     // setName(data.name);
-    //     // setEmail(data.email);
-    //     // setDepartment(data.department);
-    //     // setId(data.id);
-    //     onOpen();
-    // }
-
-
     const handleDelete = async (id: string) => {
-        await api.delete(`/clients/${id}`);
-        const newUsers = users.filter((user: IUsers) => user.id !== id);
-        setUsers(newUsers);
+        
+      await api.delete(`/clients/${id}`);
+        // const newUsers = users.filter((user: IUsers) => user.id !== id);
+        // setUsers(newUsers);
+      setUsers(users.filter(user => user.id !== id ));
+     
     }
 
-    // const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
-    //   onOpen();
-    //   setUsers({...users, 
-    //     [e.target.name]: e.target.value,
-
-    //   });
-    // }
+    const handleUpdateUser = async (cliente: IUsers): Promise<void> => {
+    
+      try {
+        const userUpdated = await api.put(
+          `/foods/${EditingUser.id}`,
+          { ...EditingUser, ...users },
+        );
+  
+        const usersUpdated = users.map(f =>
+          f.id !== userUpdated.data.id ? f : userUpdated.data,
+        );
+  
+        setUsers(usersUpdated);
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
     const handleEditFood = (cliente: IUsers) => {
       setEditingUser(cliente);
       setEditModalOpen(true)
+      setId(cliente.id);
+      setName(cliente.name);
+      setEmail(cliente.email);
+      setDepartment(cliente.department);
       console.log(EditingUser)
+      console.log(cliente.name)
     }
-    const handleShowUpdate = ({id,name,email, department}: IUsers) => {
-      setId(id);
-      setName(name);
-      setEmail(email);
-      setDepartment(department);
-      onOpen();
-      console.log({id,name,email,department})
+    // const handleShowUpdate = ({id,name,email, department}: IUsers) => {
+    //   setId(id);
+    //   setName(name);
+    //   setEmail(email);
+    //   setDepartment(department);
+    //   onOpen();
+    //   console.log({id,name,email,department})
       
-    }
-
-    
-
-
-
-    // useEffect(() => {
-
-    //   async function loadUsers() {
-  
-    //       const response =  await api.get('/clients').then(({ data }) => {
-    //       const newData: any = []
-    //       const convertData = data.data
-  
-    //       convertData.map((item: any) => {
-    //         newData.push({
-    //           id: item._id,
-    //           name: item.name,
-    //           email: item.email,
-    //           department: item.department,
-    //           createdAt: item.createdAt
-    //         })
-    //       })
-  
-    //       setUsers(newData)
-    //     })
-  
-    //   }
-    //   loadUsers();
-    // }, [])
-  
-
+    // }
 
     return (
         <Box
@@ -210,7 +158,7 @@ export function TableList() {
         isOpen={editModalOpen}
         EditingUser={EditingUser}
         onClose={toggleEditModal}
-        handleUpdateUser={handleShowUpdate}
+        handleUpdateUser={handleUpdateUser}
         />
       </Box>
 

@@ -127,19 +127,13 @@ export default function FormModal ({isOpen, onClose}: ModalProps) {
                 onChange={event => setDepartment(event.target.value)}
             />
             {!!errors && <FormErrorMessage textColor="red.300">{errors.department}</FormErrorMessage>}     
-            <Button colorScheme="teal" type="submit">{id? "Update": "Register"}</Button>
+            <Button colorScheme="teal" type="submit" mt="6">Register</Button>
             </FormControl>
             
           </ModalBody>
 
-          <ModalFooter>
-            {/* <Button colorScheme="teal" type="submit"></Button> */}
-            <Button colorScheme='blue' ml={3} onClick={onClose}>
-              Close
-            </Button>
-            
-            
-          </ModalFooter>
+        
+        
           
         </ModalContent>
       </Modal>
