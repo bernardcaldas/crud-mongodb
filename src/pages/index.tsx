@@ -45,16 +45,31 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
 
- const handleAddUsers = async () => {
-    const {data} = await api.post('/clients', {name, email, department});
-    setUsers([...users, data]);
-    setEmail("");
-    setName("");
-    setDepartment("");
-    onClose();
-  }
-  
-  
+//  const handleAddUsers = async () => {
+//     const {data} = await api.post('/clients', {name, email, department});
+//     setUsers([...users, data]);
+//     setEmail("");
+//     setName("");
+//     setDepartment("");
+//     onClose();
+//   }
+  useEffect(() => {
+    api.get('/clients').then(({ data }) => {
+        const newData: any = []
+        const convertData = data.data
+        convertData.map((item: any) => {
+          newData.push({
+            id: item._id,
+            name: item.name,
+            email: item.email,
+            department: item.department,
+            createdAt: item.createdAt
+          })
+        })
+  setUsers(data.data);
+  })
+  }, []);
+    
   return (    
 
     <Flex
@@ -97,10 +112,10 @@ export default function Home() {
         leftIcon={<FaPlus />}
         onClick={() => onOpen()}
       >Add User</Button>
+      
       <FormModal 
         isOpen={isOpen}
         onClose={onClose}
-        handleAddUsers={() => handleAddUsers}
       />
     
     </Flex>
@@ -112,15 +127,6 @@ export default function Home() {
   );
   
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { data } = await api.get('/clients');
-//   return {
-//     props: {
-//       users: data.data
-//     }
-//   }
-// }
 
 
 

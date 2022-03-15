@@ -29,9 +29,7 @@ export function TableList() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
-
-        const interval = setInterval(() => {
-          const response =  api.get('/clients').then(({ data }) => {
+             api.get('/clients').then(({ data }) => {
                   const newData: any = []
                   const convertData = data.data
                   convertData.map((item: any) => {
@@ -43,13 +41,35 @@ export function TableList() {
                       createdAt: item.createdAt
                     })
                   })
-            setUsers(newData);
-            
-            
-          });
-        }, 4000);
-        return () => clearInterval(interval);
+            setUsers(data.data);
+          })
     }, []);
+  //update state of 'users' with the data from the api after update or delete 
+  
+
+
+  //   useEffect(() => {
+
+  //     const interval = setInterval(() => {
+  //       const response =  api.get('/clients').then(({ data }) => {
+  //               const newData: any = []
+  //               const convertData = data.data
+  //               convertData.map((item: any) => {
+  //                 newData.push({
+  //                   id: item._id,
+  //                   name: item.name,
+  //                   email: item.email,
+  //                   department: item.department,
+  //                   createdAt: item.createdAt
+  //                 })
+  //               })
+  //         setUsers(newData);
+          
+          
+  //       });
+  //     }, 4000);
+  //     return () => clearInterval(interval);
+  // }, []);
 
     const toggleEditModal = () => {
 
@@ -64,44 +84,37 @@ export function TableList() {
       setUsers(users.filter(user => user.id !== id ));
      
     }
-
-    const handleUpdateUser = async (cliente: IUsers): Promise<void> => {
     
-      try {
-        const userUpdated = await api.put(
-          `/foods/${EditingUser.id}`,
-          { ...EditingUser, ...users },
-        );
-  
-        const usersUpdated = users.map(f =>
-          f.id !== userUpdated.data.id ? f : userUpdated.data,
-        );
-  
-        setUsers(usersUpdated);
-      } catch (err) {
-        console.log(err);
-      }
+    const onUpdateUser = async (id: string, newUser: IUsers) => {
+      await api.put(`/clients/${id}`, {newUser});
+      setUsers(users.map((i) => (i.id === id ? newUser : i)));
+      console.log('tentativa gravar put banco')
     }
 
-    const handleEditFood = (cliente: IUsers) => {
-      setEditingUser(cliente);
-      setEditModalOpen(true)
-      setId(cliente.id);
-      setName(cliente.name);
-      setEmail(cliente.email);
-      setDepartment(cliente.department);
-      console.log(EditingUser)
-      console.log(cliente.name)
-    }
-    // const handleShowUpdate = ({id,name,email, department}: IUsers) => {
-    //   setId(id);
-    //   setName(name);
-    //   setEmail(email);
-    //   setDepartment(department);
-    //   onOpen();
-    //   console.log({id,name,email,department})
-      
+    // const handleUpdateUser = async (cliente: IUsers): Promise<void> => {
+    //   setEditingUser(cliente);
+    //   try {
+    //     const userUpdated = await api.put(
+    //       `/foods/${EditingUser.id}`,
+    //       { ...EditingUser, ...users },
+    //     );
+  
+    //     const usersUpdated = users.map(f =>
+    //       f.id !== userUpdated.data.id ? f : userUpdated.data,
+    //     );
+  
+    //     setUsers(usersUpdated);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
     // }
+
+      const handleEditFood = (cliente: IUsers) => {
+        setEditingUser(cliente);
+        setEditModalOpen(true);
+  
+      }
+
 
     return (
         <Box
@@ -155,10 +168,10 @@ export function TableList() {
         onClose={onClose}
       />
         <EditUserModal 
-        isOpen={editModalOpen}
-        EditingUser={EditingUser}
-        onClose={toggleEditModal}
-        handleUpdateUser={handleUpdateUser}
+          user = {EditingUser}
+          isOpen={editModalOpen}
+          onClose={toggleEditModal}
+          onUpdateUser={onUpdateUser}
         />
       </Box>
 

@@ -36,6 +36,9 @@ interface IUsers {
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // name: string;
+  // setName(): string;
+
   // handleAddUsers: (data: IUsers) => void;
   
 }
@@ -67,7 +70,7 @@ export default function FormModal ({isOpen, onClose}: ModalProps) {
     // };
     setUsers([...users, data]);
     setEmail("");
-    setName("");
+    //setName("");
     setDepartment("");
     onClose();
     
@@ -77,7 +80,7 @@ export default function FormModal ({isOpen, onClose}: ModalProps) {
     const {data} = await api.put(`/clients/${id}`, {name, email, department});
     setUsers([...users, data]);
     setEmail("");
-    setName("");
+    //setName("");
     setDepartment("");
     onClose();
 
